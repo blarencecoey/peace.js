@@ -12,7 +12,7 @@ export class CameraController {
     private targetZoom = 1.0;
     private minZoom = 0.7;
     private maxZoom = 1.5;
-    private maxParallaxAngle = 0.05; // ~2.8 degrees in radians
+    private maxParallaxAngle = 0.1; // ~2.8 degrees in radians
 
     constructor(camera: THREE.PerspectiveCamera, canvas: HTMLCanvasElement) {
         this.camera = camera;
