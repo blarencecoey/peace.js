@@ -2,7 +2,7 @@
 
 An immersive, interactive 3D zen garden experience built with Three.js. Rake sand patterns, place stones, and find moments of calm in this meditative digital space.
 
-## ✨ Features
+## Features
 
 - **Interactive Sand Raking**: Click and drag to create beautiful rake patterns with real-time displacement mapping
 - **Dynamic Camera**: Subtle parallax effect following mouse movement, zoom with scroll wheel
@@ -11,7 +11,7 @@ An immersive, interactive 3D zen garden experience built with Three.js. Rake san
 - **Zen-Inspired UI**: Minimal, non-intrusive interface that reveals on interaction
 - **Responsive Design**: Works on desktop and mobile devices
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Local Development
 
@@ -32,7 +32,7 @@ npm run build
 npm run preview
 ```
 
-## 🌐 Deploy to Vercel
+## Deploy to Vercel
 
 ### Option 1: Deploy via Vercel Dashboard
 
@@ -63,7 +63,7 @@ The project includes a `vercel.json` with optimized settings:
 - Framework: Vite
 - SPA routing enabled
 
-## 🎮 Controls
+## Controls
 
 - **Click & Drag**: Rake the sand
 - **Mouse Move**: Subtle camera parallax
@@ -71,7 +71,7 @@ The project includes a `vercel.json` with optimized settings:
 - **Settings Menu** (top-left): Change time of day, reset garden
 - **Tool Selector** (right): Switch between rake, stone, and hand tools
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Three.js** - 3D graphics
 - **TypeScript** - Type safety
@@ -79,7 +79,7 @@ The project includes a `vercel.json` with optimized settings:
 - **GSAP** - Smooth animations
 - **Custom GLSL Shaders** - Sand displacement effects
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
@@ -99,7 +99,7 @@ src/
 └── main.ts                     # Entry point
 ```
 
-## 🎨 Design Philosophy
+## Design Philosophy
 
 Built following Japanese aesthetic principles:
 - **Ma (間)** - Beauty of negative space
