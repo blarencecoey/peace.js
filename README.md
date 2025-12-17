@@ -2,8 +2,7 @@
 
 An immersive, interactive 3D zen garden experience built with Three.js. Rake sand patterns, place stones, and find moments of calm in this meditative digital space.
 
-<img width="480" height="270" alt="DecoPLanLLM" src="src/assets/peace-js.png" />
-[Experience ZEN](https://peace-js.vercel.app/)
+[![peace.js](src/assets/peace-js.png)](https://peace-js.vercel.app/)
 
 ## Features
 
