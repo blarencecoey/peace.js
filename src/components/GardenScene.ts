@@ -1,12 +1,22 @@
 import * as THREE from 'three';
 import { COLORS, CONFIG } from '../utils/constants';
 import { Sand } from './Sand';
+import { InputManager } from './InputManager';
+import { CameraController } from './CameraController';
+import { StoneManager } from './Stone';
+import { Environment } from './Environment';
+import { UI, type TimeOfDay } from './UI';
 
 export class GardenScene {
     private scene: THREE.Scene;
     private camera: THREE.PerspectiveCamera;
     private renderer: THREE.WebGLRenderer;
     private sand: Sand;
+    private cameraController: CameraController;
+    private stoneManager: StoneManager;
+    private environment: Environment;
+    private ui: UI;
+    private sunLight!: THREE.DirectionalLight;
 
     constructor(canvas: HTMLCanvasElement) {
         // 1. Scene Setup
@@ -47,11 +57,29 @@ export class GardenScene {
         // 4. Lighting
         this.setupLighting();
 
-        // 5. Add Objects
+        // 5. Add Environment (ground, boundary, moss)
+        this.environment = new Environment();
+        this.scene.add(this.environment.group);
+
+        // 6. Add Sand
         this.sand = new Sand();
         this.scene.add(this.sand.mesh);
 
-        // 6. Handle Resize
+        // 7. Stone Manager
+        this.stoneManager = new StoneManager(this.scene);
+
+        // 8. Input Manager for interaction
+        new InputManager(canvas, this.camera, this.sand);
+
+        // 9. Camera Controller
+        this.cameraController = new CameraController(this.camera, canvas);
+
+        // 10. UI Setup
+        this.ui = new UI();
+        this.ui.setResetCallback(() => this.resetGarden());
+        this.ui.setTimeChangeCallback((time) => this.setTimeOfDay(time));
+
+        // 11. Handle Resize
         window.addEventListener('resize', this.onResize.bind(this));
 
         // Start loop
@@ -75,26 +103,66 @@ export class GardenScene {
         this.scene.add(hemiLight);
 
         // Directional (Sun)
-        const sunLight = new THREE.DirectionalLight(
+        this.sunLight = new THREE.DirectionalLight(
             0xffffff,
             CONFIG.LIGHTING.SUN_INTENSITY
         );
-        sunLight.position.set(5, 15, 5);
-        sunLight.castShadow = true;
-        sunLight.shadow.mapSize.width = 2048;
-        sunLight.shadow.mapSize.height = 2048;
-        sunLight.shadow.camera.near = 0.5;
-        sunLight.shadow.camera.far = 50;
-        sunLight.shadow.bias = -0.0001;
+        this.sunLight.position.set(5, 15, 5);
+        this.sunLight.castShadow = true;
+        this.sunLight.shadow.mapSize.width = 2048;
+        this.sunLight.shadow.mapSize.height = 2048;
+        this.sunLight.shadow.camera.near = 0.5;
+        this.sunLight.shadow.camera.far = 50;
+        this.sunLight.shadow.bias = -0.0001;
 
         // Shadow camera bounds
         const sSize = 15;
-        sunLight.shadow.camera.left = -sSize;
-        sunLight.shadow.camera.right = sSize;
-        sunLight.shadow.camera.top = sSize;
-        sunLight.shadow.camera.bottom = -sSize;
+        this.sunLight.shadow.camera.left = -sSize;
+        this.sunLight.shadow.camera.right = sSize;
+        this.sunLight.shadow.camera.top = sSize;
+        this.sunLight.shadow.camera.bottom = -sSize;
 
-        this.scene.add(sunLight);
+        this.scene.add(this.sunLight);
+    }
+
+    private resetGarden() {
+        this.sand.reset();
+        this.stoneManager.clearAll();
+    }
+
+    private setTimeOfDay(time: TimeOfDay) {
+        let bgColor: THREE.Color;
+        let sunColor: THREE.Color;
+        let intensity: number;
+
+        switch (time) {
+            case 'dawn':
+                bgColor = new THREE.Color('#FFE6E6');
+                sunColor = new THREE.Color('#FFB6C1');
+                intensity = 1.0;
+                break;
+            case 'dusk':
+                bgColor = new THREE.Color('#FFE4C4');
+                sunColor = new THREE.Color('#FFA500');
+                intensity = 1.2;
+                break;
+            case 'night':
+                bgColor = new THREE.Color('#1A1A2E');
+                sunColor = new THREE.Color('#87CEEB');
+                intensity = 0.3;
+                break;
+            case 'day':
+            default:
+                bgColor = COLORS.BACKGROUND;
+                sunColor = new THREE.Color(0xffffff);
+                intensity = CONFIG.LIGHTING.SUN_INTENSITY;
+                break;
+        }
+
+        this.scene.background = bgColor;
+        this.scene.fog = new THREE.Fog(bgColor.getHex(), 20, 50);
+        this.sunLight.color = sunColor;
+        this.sunLight.intensity = intensity;
     }
 
     private onResize() {
@@ -114,6 +182,7 @@ export class GardenScene {
         // Update logic
         const time = Date.now() * 0.001;
         this.sand.update(time);
+        this.cameraController.update();
 
         this.renderer.render(this.scene, this.camera);
     }

@@ -26,5 +26,9 @@ export const CONFIG = {
     SUN_INTENSITY: 1.5,
     AMBIENT_INTENSITY: 0.4,
     HEMISPHERE_INTENSITY: 0.6,
+  },
+  SAND: {
+    DISPLACEMENT_SCALE: 0.15,
+    RAKE_WIDTH: 0.01,
   }
 };
